@@ -381,4 +381,17 @@ class TAR extends Archive {
 		$types = [null, 'gz', 'bz'];
 		$this->tar = new \Archive_Tar($this->path, $types[self::getTarType($this->path)]);
 	}
+
+	/**
+	 * Get error object from archive_tar.
+	 *
+	 * The response is actually a \PEAR_Error object but archive_tar uses
+	 * a wrong type hint. This confuses Psalm so no type hint for now.
+	 */
+	public function getError() {
+		if ($this->tar instanceof \Archive_Tar && $this->tar->error_object instanceof \PEAR_Error) {
+			return $this->tar->error_object;
+		}
+		return null;
+	}
 }
